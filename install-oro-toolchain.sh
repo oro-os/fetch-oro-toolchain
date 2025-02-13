@@ -22,6 +22,20 @@ group Check config and dependencies
 		die "directory not found: ${ORO_TOOLCHAIN_PATH}"
 	fi
 	
+	# Try to find the first artifact that was unpacked;
+	# there should be only one folder with the name 'oro-rust-toolchain-*';
+	# find it and re-export the path variable, or error if there are none/more than 1.
+	paths="$(find "${ORO_TOOLCHAIN_PATH}" -maxdepth 1 -type d -name 'oro-rust-toolchain-*')"
+	if [ -z "${paths}" ]; then
+		die "no extracted toolchain directory found in: ${ORO_TOOLCHAIN_PATH}"
+	fi
+
+	if [ "$(echo "${paths}" | wc -l)" -ne 1 ]; then
+		die "multiple extracted toolchain directories found in: ${ORO_TOOLCHAIN_PATH}"
+	fi
+
+	export ORO_TOOLCHAIN_PATH="${paths}"
+	
 	if [ ! -d "${ORO_TOOLCHAIN_PATH}/bin" ] || [ ! -d "${ORO_TOOLCHAIN_PATH}/lib" ]; then
 		set -x
 		ls -la "${ORO_TOOLCHAIN_PATH}"
