@@ -48,10 +48,11 @@ runs:
         github_token: ${{ inputs.github_token }}
     - name: 'Install rustup toolchain'
       shell: bash
-      run: install.sh
+      run: $GITHUB_ACTION_PATH/install-oro-toolchain.sh
       env:
         ORO_TOOLCHAIN_PATH: ${{ inputs.path }}
         ORO_TOOLCHAIN_NAME: ${{ inputs.name }}
+        GITHUB_ACTION_PATH: ${{ github.action_path }}
     - name: 'Set default toolchain'
       shell: bash
       if: ${{ inputs.set_default }}
