@@ -1,0 +1,46 @@
+name: 'Fetch Oro Rust Toolchain'
+description: 'Fetches the latest Rust toolchain for the Oro operating system'
+inputs:
+  name:
+    description: 'The rustup toolchain name, i.e. the "oro-dev" in "cargo +oro-dev build"'
+    required: false
+    default: oro-dev
+  path:
+    description: 'The path to output the toolchain to'
+    required: false
+    default: ../oro-toolchain
+  github_token:
+    description: 'The GitHub token to use for fetching the artifact'
+    required: false
+    default: ${{ github.token }}
+  base_toolchain:
+    description: 'The base toolchain to use for installing the toolchain (see dtolnay/rust-toolchain)'
+    required: false
+    default: nightly
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Install Rust base toolchain'
+      uses: dtolnay/rust-toolchain@v1
+      with:
+        toolchain: ${{ inputs.base_toolchain }}
+    - name: 'Fetch toolchain artifact'
+      uses: dawidd6/action-download-artifact
+      with:
+        path: ${{ inputs.path }}
+        if_no_artifact_found: fail
+        search_artifacts: true
+        name_is_regexp: true
+        name: 'oro-rust-toolchain-[0-9]+'
+        workflow_search: true
+        repo: oro-os/toolchain
+        branch: master
+        allow_forks: false
+        search_artifacts: true
+        github_token: ${{ inputs.github_token }}
+    - name: 'Install rustup toolchain'
+      shell: bash
+      run: install.sh
+      env:
+        ORO_TOOLCHAIN_PATH: ${{ inputs.path }}
+        ORO_TOOLCHAIN_NAME: ${{ inputs.name }}
