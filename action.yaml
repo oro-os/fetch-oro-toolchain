@@ -34,7 +34,7 @@ runs:
         toolchain: ${{ inputs.base_toolchain }}
         components: ${{ inputs.components }}
     - name: 'Fetch toolchain artifact'
-      uses: dawidd6/action-download-artifact
+      uses: dawidd6/action-download-artifact@v8
       with:
         path: ${{ inputs.path }}
         if_no_artifact_found: fail
@@ -45,7 +45,6 @@ runs:
         repo: oro-os/toolchain
         branch: master
         allow_forks: false
-        search_artifacts: true
         github_token: ${{ inputs.github_token }}
     - name: 'Install rustup toolchain'
       shell: bash
