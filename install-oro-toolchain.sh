@@ -21,6 +21,14 @@ group Check config and dependencies
 	if [ ! -d "${ORO_TOOLCHAIN_PATH}" ]; then
 		die "directory not found: ${ORO_TOOLCHAIN_PATH}"
 	fi
+	
+	if [ ! -d "${ORO_TOOLCHAIN_PATH}/bin" ] || [ ! -d "${ORO_TOOLCHAIN_PATH}/lib" ]; then
+		set -x
+		ls -la "${ORO_TOOLCHAIN_PATH}"
+		set +x
+		die "invalid toolchain directory: ${ORO_TOOLCHAIN_PATH}"
+	fi
+
 	echo "found toolchain at: ${ORO_TOOLCHAIN_PATH}"
 
 	export ORO_TOOLCHAIN_NAME="${ORO_TOOLCHAIN_NAME-oro-dev}"
