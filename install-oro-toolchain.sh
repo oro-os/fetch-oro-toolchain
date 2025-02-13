@@ -51,7 +51,7 @@ group Check config and dependencies
 endgroup
 
 group Install toolchain as "+${ORO_TOOLCHAIN_NAME}"
-	chmod +x "${ORO_TOOLCHAIN_PATH}/bin/*"
+	find "${ORO_TOOLCHAIN_PATH}/bin" -type f -print0 | xargs -0 chmod +x
 	rustup toolchain link "${ORO_TOOLCHAIN_NAME}" "${ORO_TOOLCHAIN_PATH}"
 	rustc "+${ORO_TOOLCHAIN_NAME}" --version --verbose
 endgroup
